@@ -1,0 +1,12 @@
+.vscode/
+__pycache__/
+data/
+graphs/
+
+# C++ File Extensions
+*.o
+*.gch
+*.out
+*.debug
+bin
+build/

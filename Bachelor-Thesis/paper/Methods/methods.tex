@@ -1,0 +1,169 @@
+\section{METHODS}
+
+In this section, we explore the numerical methods applied to optimize the static FK of CTCRs. The focus is on numerical integration techniques, orientation representations, and solver strategies, all aimed at improving computational efficiency.
+
+\subsection{Numerical Integration}
+
+\bulletpoints{
+    \item Topic Sentence: Compare and contrast RK integrators with AB integrators. Briefly explain the theory behind both to show why AB is more efficient.
+    \item Explain how RK integrators work
+    \item Discuss RK computational cost
+    \item Explain how AB integrators work
+    \item Discuss AB computational cost
+    \item Discuss the stability region of AB methods and how extrapolation affects it
+}
+
+\commentblock{
+An $\stage$-stage Runge-Kutta (RK) method uses an interpolating polynomial of degree $\stage$
+\begin{align*}
+	\boldsymbol{Y}_i &= \boldsymbol{y}_{n-1} + h \sum_{j=1}^{i} a_{ij} \boldsymbol{f}(s_{n-1} + c_j h, \boldsymbol{Y}_j )\\
+	\boldsymbol{y}_n &= \boldsymbol{y}_{n-1} + h \sum_{i=1}^{\stage} b_i \boldsymbol{f}(s_{n-1} + c_i h, \boldsymbol{Y}_i)
+\end{align*}
+requiring $\stage$ function evaluations per step \cite{AscherPetzold_SIAM_1998}.
+In contrast Adams-Bashforth (AB) integrators extrapolate the solution using previous integration steps, requiring only one new function evaluation per step resulting in a comparable performance to Forward Euler (FE) \cite{AscherPetzold_SIAM_1998}.
+Nonetheless, the stability region decreases with higher-degree extrapolation, limiting AB methods to problems with low stiffness \cite{AscherPetzold_SIAM_1998, Heath_SIAM_2018}.
+The extrapolating polynomial for an $\stage$-stage AB method is constructed as follows
+\begin{align*}
+    \boldsymbol{y}_n = \boldsymbol{y}_{n - 1} + h \sum^{\stage}_{j = 1} \gamma_j \boldsymbol{f}(s_{n - j}, \boldsymbol{y}_{n - j})
+    ,
+\end{align*}
+where $\gamma_j$ is the coefficient at each interpolating point.
+
+\begin{table}[thb!]
+	\centering
+	\caption{Coefficients of AB methods up to order 5 \cite{AscherPetzold_SIAM_1998}.}
+	\label{tab:adams_bashforth}
+    \begin{tabular}{c || c | ccccc}
+    $\stage$         & $j \rightarrow$  & $1$    & $2$     & $3$    & $4$     & $5$  \\
+    \hline
+    $1$         & $\gamma_j$       & $1$ \\
+    $2$         & $2\gamma_j$      & $3$    & $-1$ \\
+    $3$         & $12\gamma_j$     & $23$   & $-16$   & $5$ \\
+    $4$         & $24\gamma_j$     & $55$   & $-59$   & $37$   & $-9$\\
+    $5$         & $720\gamma_j$    & $1901$ & $-2774$ & $2616$ & $-1274$ & $251$\\
+    \end{tabular}
+\end{table}
+}
+
+\subsection{Integrating Orientation}
+
+\bulletpoints{
+    \item Topic Sentence: Introduce quaternions. Explain that it was initially though to degrade $SO(3)$ structure.
+    \item Define quaternions
+    \item Explain that quaternions provide a minimal rotation description, making it computationally efficient.
+    \item Quaternions were though to degrade $SO(3)$ during integration and unit-length was enforced which negates the computational benefits.
+    \item With the quaternion derivative equation, standard integrators can be used along with the derivative equation without degrading $SO(3)$ structure
+}
+
+\commentblock{
+A quaternion is a hyper-complex number represented as
+\begin{align*}
+    \boldsymbol{\eta} = a + b\boldsymbol{i} + c\boldsymbol{j} + d\boldsymbol{k},\\
+    \boldsymbol{i}^2 = \boldsymbol{j}^2 = \boldsymbol{k}^2 = \boldsymbol{ijk} = -1,
+\end{align*}
+with real coefficients $a, b, c, d$ for the basis vectors $\boldsymbol{1}, \boldsymbol{i}, \boldsymbol{j}, \boldsymbol{k}$ \cite{Stuelpnagel_SIAM_1964}.
+Quaternions offer a minimal yet complete 3D rotation description, making them a computationally efficient representation of $SO(3)$ \cite{Stuelpnagel_SIAM_1964}.
+Initially, it was believed that integrating non-unit quaternions would degrade the $SO(3)$ structure, requiring the enforcement of unit length as an additional algebraic constraint, which was computationally intensive \cite{Rucker_RAL_2018}.
+However, \cite{Rucker_RAL_2018} showed that non-unit quaternions can be integrated without constraints using the conventional quaternion derivative equation
+\begin{align*}
+    & \boldsymbol{\dot{\eta}} = \frac{1}{2} W^T \boldsymbol{\omega}, & W = \begin{bmatrix}
+		-b &  a &  d & c \\
+		-c & -d &  a & b \\
+        -d &  c & -b & a \\
+	\end{bmatrix} &
+\end{align*}
+where $\omega \in \mathbb{R}^3$ is the body-frame's angular velocity vector, significantly improving accuracy over to Euler angles and rotation matrices \cite{Rucker_RAL_2018, GrassmanBurgner-Kahrs_RSS_2019}.
+}
+
+\subsection{Non-Linear Solvers}
+
+\bulletpoints{
+    \item Topic Sentence: Introduce the Newton Raphson algorithm and compare finite differences to secant
+    \item Define and explain how Newton Raphson works
+    \item Newton method achieves quadratic convergence but convergence is not guaranteed
+    \item Finite differences needs $m + 1$ function evaluations along with $\mathcal{O}(m^3)$ arithmetic operations to get the inverse.
+}
+
+\commentblock{
+Let $\boldsymbol{z}: \mathbb{R}^m \rightarrow \mathbb{R}^m$ be a differentiable function with $D(\boldsymbol{x})$ as its Jacobian matrix.
+Iteratively solving $D(\boldsymbol{x})\boldsymbol{d} = -\boldsymbol{z}(\boldsymbol{x})$ using the Newton-Raphson method converges towards a local minimum, corresponding to a root of $\boldsymbol{z}$ \cite{Heath_SIAM_2018}.
+Newton-Raphson achieves quadratic convergence, doubling the number of correct digits with each iteration \cite{Heath_SIAM_2018}.
+However, convergence is not guaranteed if $D$ is singular, $\boldsymbol{z}$ is poorly conditioned, or no root exists.
+Without a closed-form expression, computing $D$ can be costly since approximating $D$ via finite differences requires at least $m + 1$ evaluations of $\boldsymbol{z}$ per iteration, and solving the linear system involves $\mathcal{O}(m^3)$ arithmetic operations, adding significant computational overhead \cite{Heath_SIAM_2018}.
+
+\begin{algorithm}
+    \begin{algorithmic}[1]
+        \State $\boldsymbol{x_0} \gets$ initial guess
+        \For{$k = 1,2,3,\dots$}
+            \State Solve $D(\boldsymbol{x}_{k - 1})\boldsymbol{d} = -\boldsymbol{z}(\boldsymbol{x}_{k - 1})$ for $\boldsymbol{d}$
+            \State $\boldsymbol{x}_k \gets \boldsymbol{x}_{k - 1} + \boldsymbol{d}$
+        \EndFor
+    \end{algorithmic}
+    \caption{Newton-Raphson's Method}
+    \label{alg:newton}
+\end{algorithm}
+}
+
+\bulletpoints{
+    \item Topic Sentence: Introduce and explain Broyden's multi-dimensional secant update.
+    \item Secant update is computationally inexpensive and is a good enough approximation for well-conditioned problems.
+    \item Although secant update achieves super-linear convergence, it can still achieve a better runtime if finite differences are really expensive
+    \item Broyden extended the secant update to multiple dimensions
+    \item Broyden used the Sherman-Morrison formula to update the inverse jacobian directly
+}
+
+\commentblock{
+In one-dimensional problems, the secant update offers a computationally inexpensive alternative to finite-differences for derivative approximations, especially when $\boldsymbol{z}(x)$ is well-conditioned but costly to compute.
+Despite the secant method's super-linear convergence rate of $(1 + \sqrt{5})/2 \approx 1.618$, its lower cost per iteration often outweighs the slightly higher number of iterations needed \cite{Heath_SIAM_2018}.
+In \cite{Broyden_AMS_1965}, Broyden extended the secant method to multiple dimensions by directly updating the Jacobian matrix using rank-one updates
+\begin{align}
+    D_k = D_{k - 1} + \frac{\Delta \boldsymbol{z}_k - D_{k - 1} \Delta \boldsymbol{x}_k}{\|\Delta \boldsymbol{x}_k\|^2} \Delta \boldsymbol{x}^T_k
+    .
+    \label{eq:secant_update_broyden}
+\end{align}
+He also noted that the Sherman–Morrison formula (Eq.~\ref{eq:sherman-morrison}) can be used to directly update the inverse Jacobian matrix $D^{-1}$
+\begin{align}
+    (U + \boldsymbol{u}\boldsymbol{v}^T)^{-1} = U^{-1} - \frac{U^{-1} \boldsymbol{u}\boldsymbol{v}^T U^{-1}}{\boldsymbol{1} + \boldsymbol{v}^T U^{-1}\boldsymbol{u}}
+    \label{eq:sherman-morrison}
+\end{align}
+where, for some vectors $\boldsymbol{u}, \boldsymbol{v} \in \mathbb{R}^m$, $\boldsymbol{u}\boldsymbol{v}^T$ is the outer product \cite{Broyden_AMS_1965}.
+Applying the Sherman-Morrison formula to Broyden's multi-dimensional secant update (Eq.~\ref{eq:secant_update_broyden}) results in
+\begin{align}
+    D^{-1}_k = D^{-1}_{k - 1} - \frac{\boldsymbol{d}_k \left(-\boldsymbol{d}^T_{k - 1} D^{-1}_{k-1} \right)^T}{-\boldsymbol{d}_{k - 1}^T (\boldsymbol{d}_k - \boldsymbol{d}_{k - 1})}
+    \label{eq:inverse_Jacobian_update}
+\end{align}
+where $\boldsymbol{d}_k = D^{-1}_{k - 1} \boldsymbol{z}_k$ is the gradient at iteration $k$ \cite{Misha_Lecture}.
+Please note that the fraction notation implies element-wise or Hadamard division \cite{Broyden_AMS_1965}.
+}
+
+\bulletpoints{
+    \item Topic Sentence: Explain the computational complexity of the Broyden update
+    \item Allows for direct gradient calculation, each update requires only $\mathcal{O}(m^2)$ operations per iteration
+    \item Only needs a single function call per iteration to calculate $D^{-1}$.
+}
+
+\commentblock{
+The availability of the inverse Jacobian allows for direct gradient calculation, with each secant update requiring only $\mathcal{O}(m^2)$ operations per iteration \cite{Heath_SIAM_2018}.
+Moreover, employing the secant update method reduces the number of function calls to $\boldsymbol{z}$ from $m + 1$ calls to a single function call per iteration, significantly lowering the computational cost to a level comparable to having a closed-form of $D^{-1}$.
+}
+
+\subsection{Inverse Jacobian Initialization}
+
+\bulletpoints{
+    \item Topic Sentence: When initializing the inverse jacobian, an approximation can be used to lower the computational cost.
+    \item Explain how different levels of approximations work (the two extremes: identity matrix or finite differences).
+    \item We can use a larger step-size when initializing the jacobian
+    \item The optimal initial step size can be obtained by applying a minimization function.
+}
+
+\commentblock{
+Multi-dimensional secant updates typically begin by initializing $D^{-1}$, often via finite-differences, which can be costly if the iteration count is low.
+Alternatively, using the identity matrix for $D^{-1}$ might work for well-conditioned problems but may require a higher iteration count to correct the poor initial estimate \cite{Heath_SIAM_2018}.
+In this context, varying the initial step size $h_{\text{initial}}$ used in the Jacobian construction can provide control over the approximation level present, with larger $h_{\text{initial}}$ resulting in rougher estimates.
+To minimize total function calls while solving the BVP, the optimal $h_{\text{initial}}$ can be determined using
+\begin{align}
+    h_{\text{optimal}} = \underset{h_\text{initial}}{\operatorname{argmin}} \left( n_{\boldsymbol{f}}(h) + n_{\boldsymbol{f}, D}(h_{\text{initial}}) \right)
+    \label{eq:minimization_criterion}
+\end{align}
+where $n_{\boldsymbol{f}, D}(h_{\text{initial}})$ is the number of function calls used to approximate $D^{-1}$.
+}

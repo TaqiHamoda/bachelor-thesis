@@ -1,0 +1,147 @@
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{mathtools}	% the mathtools package loads \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{siunitx}	% \SI{ #value }{ #unit }
+\usepackage{cases}
+\usepackage{color}
+%\usepackage{graphicx}			<--- comment
+\usepackage{xcolor}
+\usepackage{lipsum}
+
+\def\av{ \boldsymbol{a} }
+\def\bv{ \boldsymbol{b} }
+\def\mv{ \boldsymbol{m} }
+\def\nv{ \boldsymbol{n} }
+\def\pv{ \boldsymbol{p} }
+\def\qv{ \boldsymbol{q} }
+\def\sv{ \boldsymbol{s} }
+\def\vv{ \boldsymbol{v} }
+\def\xv{ \boldsymbol{x} }
+\def\yv{ \boldsymbol{y} }
+\def\Mm{ \boldsymbol{M} }
+\def\Rm{ \boldsymbol{R} }
+\def\Sm{ \boldsymbol{S} }
+\def\Imat{ \boldsymbol{I} }
+\def\omegav{ \omega }
+\def\thetav{ \boldsymbol{\theta} }
+\def\stage{\mathcal{S}}
+
+
+\def\iunit{ \imath }	%similar to \imath and \jmath
+\def\junit{ \jmath } %similar to \imath and \jmath (not available with the package mathptmx)
+\def\kunit{ k } %similar to \imath and \jmath
+
+\def\quaternion{	\xi 	}			%which is equal to \def\xiv{ \bldgreek{\xi} }
+\def\qunit{ \xi				} 			%similar to \imath and \jmath
+%\def\qr{	\xi 			}			%real number
+\def\dq{	\check{\quaternion} 	}	% \boldsymbol #old: \boldmath{\check{\q}}
+\def\dqunit{ \check{\xi}	} 			%similar to \imath and \jmath
+\def\dual{	\varepsilon	}
+\def\cconj{	^{*}			}			%complex conjugation
+\def\dconj{	^{+}			}			%dual conjugation
+\def\tconj{	^{\dagger}	}				%total conjugation
+
+\def\quaternionnorm{ \operatorname{N}\!\left(\quaternion\right)	}	%quaternionic norm
+\def\dqnorm{	\operatorname{N}\!\left(\dq\right)	}	%dual quaternionic norm
+
+\def\pathpri{v}
+\def\Pathpri{V\!}
+\def\timepri{\zeta}
+
+\newcommand{\sgn}[1]{ \operatorname{sgn}\! \left\{ #1 \right\} }%
+%\newcommand{\qnorm}[1]{N\!\left(#1\right)}
+%\newcommand{\qbetrag}[1]{\left|\left|#1\right|\right|_\ind{2}}
+
+\definecolor{matlab1}{rgb}{0.0000, 0.4470, 0.7410}
+\definecolor{matlab2}{rgb}{0.8500, 0.3250, 0.0980}
+\definecolor{matlab3}{rgb}{0.9290, 0.6940, 0.1250}
+
+
+\definecolor{matlab5}{rgb}{0.0000, 0.7059, 0.0000}
+\definecolor{matlab7}{rgb}{0.7059, 0.0000, 0.0000}
+
+
+%% Book Chapter -- Trajectory Generator
+\def\SO3{ {SO\!\left(3\right)} }
+%\def\SO2{ {SO\!\left(2\right)} }
+\def\SE3{ {S\:\!\!E\!\left(3\right)} }
+%\def\SE2{ {S\:\!\!E\!\left(2\right)} }
+\def\E3{ {E\!\left(3\right)} }
+
+\newcommand{\etal}{{et al.\;}}
+\newcommand{\ie}{{i.e.\;}}			%id est = that is
+\newcommand{\eg}{{e.g.\;}}
+\newcommand{\wrt}{{w.r.t.\;}}		
+\newcommand{\qed}{$\blacksquare$}
+
+\newcommand{\timeprimitive}{\tau}
+\newcommand{\pathprimitive}{s}
+
+\newcommand{\vmax}{v_\text{max}}
+\newcommand{\amax}{a_\text{max}}
+\newcommand{\jmax}{j_\text{max}}
+
+\newcolumntype{N}{>{\scriptsize}l}
+
+\newcommand{\coordinateframe}[1]{\left\{#1\right\}}
+
+\def\Ca{\textcolor{black}{C_{\mathrm{a}, n}}}
+\newcommand{\Can}[1]{\textcolor{black}{C_{\mathrm{a}, #1}}}
+\def\Cj{\textcolor{black}{C_{\mathrm{j}, n}}}
+\newcommand{\Cjn}[1]{\textcolor{black}{C_{\mathrm{j}, #1}}}
+
+\def\vlo{\textcolor{black}{v_\mathrm{lo}}}
+\def\vcr{\textcolor{black}{v_\mathrm{cr}}}
+\def\vsd{\textcolor{black}{v_\mathrm{sd}}}
+\def\slo{\textcolor{black}{s_\mathrm{lo}}}
+\def\scr{\textcolor{black}{s_\mathrm{cr}}}
+\def\ssd{\textcolor{black}{s_\mathrm{sd}}}
+\def\Tlo{\textcolor{black}{T_\mathrm{lo}}}
+\def\Tcr{\textcolor{black}{T_\mathrm{cr}}}
+\def\Tsd{\textcolor{black}{T_\mathrm{sd}}}
+\def\Tble{\textcolor{black}{T_\mathrm{ble}}}
+\def\Llo{\textcolor{black}{L_\mathrm{lo}}}
+\def\Lcr{\textcolor{black}{L_\mathrm{cr}}}
+\def\Lsd{\textcolor{black}{L_\mathrm{sd}}}
+\def\motionlaw{\textcolor{black}{s}}
+
+\def\vmax{\textcolor{black}{v_\mathrm{max}}}
+\def\amax{\textcolor{black}{a_\mathrm{max}}}
+\def\dmax{\textcolor{black}{d_\mathrm{max}}}
+
+\def\pathpri{\textcolor{black}{v_{\mathrm{N},n}}}
+\def\Pathpri{\textcolor{black}{V_{\mathrm{N},n}}}
+\newcommand{\pathprin}[1]{\textcolor{black}{v_{\mathrm{N},#1}}}
+\newcommand{\Pathprin}[1]{\textcolor{black}{V_{\mathrm{N},#1}}}
+\def\timepri{\textcolor{black}{\tau}}
+
+%% new
+\def\C3{\textcolor{black}{\mathcal{C}^3}}
+\def\Cn{\textcolor{black}{\mathcal{C}^n}}
+
+\def\Cv{\textcolor{black}{C_{\mathrm{v}, n}}}
+
+% My own defined commands for easy modifications
+\newcommand{\commentblock}[1]{
+    #1
+    %\hline
+    %\vspace{5px}
+}
+
+\newcommand{\bulletpoints}[1]{
+    %\begin{itemize}
+    %    #1
+    %\end{itemize}
+}
+
+
+% \begin{itemize}
+%     \item \textit{}
+%     \begin{itemize}
+%         \item 
+%         \item 
+%         \item 
+%         \item 
+%     \end{itemize}
+% \end{itemize}

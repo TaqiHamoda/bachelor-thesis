@@ -1,0 +1,149 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{subcaption}
+%\usepackage{graphicx}
+\usepackage{wasysym}
+\usepackage{ulem} 
+\usepackage{tcolorbox}
+\usepackage{booktabs} % for bottomrule, toprule, cmidrule
+\usepackage{siunitx}
+\usepackage{textcomp}
+
+% my own style file
+\input{paper_style.sty}
+
+
+\title{\LARGE \bf
+From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs for use in Real-Time Systems
+% On Runtime Reduction in... by...
+}
+
+
+\author{Taqi Hamoda, Reinhard M.~Grassmann, and Jessica Burgner-Kahrs, \textit{Senior Member, IEEE}% <-this % stops a space
+\thanks{We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC), [RGPIN-2019-04846].}
+\thanks{All authors are with Continuum Robotics Laboratory, Department of Mathematical and Computational Sciences, University of Toronto, Mississauga, ON L5L 1C6, Canada {\tt\small reinhard.grassmann@utoronto.ca}}%$^{1}$
+}
+
+
+\begin{document}
+
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+\commentblock{
+Efficient computation of the forward kinematics (FK) for concentric tube continuum robots (CTCRs) is essential for real-time control and deployment.
+However, the current gold-standard model, the static Cosserat rod model, is computationally intensive, limiting its use in high-frequency applications.
+Despite various optimization efforts, a universal strategy that achieves real-time performance has remained elusive.
+We tackle this challenge by applying a series of numerical optimizations, including explicit integration techniques, quaternion-based orientation representation, and efficient Jacobian updating schemes.
+These optimizations reduce function calls by up to 90\% without sacrificing accuracy, achieving a runtime of just 120 microseconds for FK computation, enabling real-time control while ensuring universal applicability across various architectures and systems.
+Additionally, we introduce a novel, computationally accessible proxy for elastic stability, which could enable the detection of snapping behavior in CTCRs.
+}
+
+\bulletpoints{
+    \item Topic Sentence: Give a brief overview of the problem/challenge the paper is trying to address, how the paper addresses this challenge/what our contribution to the field is, and the results we obtained.
+    \item The challenge that we are trying to solve is that the Cosserat Rod model is not as efficient as it could be. There is still potential for a more universal optimization strategy.
+    \item Proof that this indeed is a problem is that there are many papers that attempt to optimize the kinematics model, with varying degrees of success.
+    \item Our method is to apply different numerical optimizations to the solver and integrator instead of modifying the actual problem core (instead of tweaking a car's engine to make it faster, we optimize the chassis to make it as aerodynamic as possible).
+    \item Discuss why our method differs from the current state of the art.
+    \item Our method provides universal optimization to the model regardless of the architecture or the actuation system. For a regular CTCR, we bring the runtime down to 120 us.
+    \item I also want to briefly mention that we might have found a reliable numerical proxy/indicator for elastic stability.
+}
+
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%===============================================================================
+% Introduction
+\input{Introduction/introduction}
+
+%===============================================================================
+% The Forward Kinematics
+\input{The Boundary Value Problem/bvp}
+
+%===============================================================================
+% Methods
+\input{Methods/methods}
+
+%===============================================================================
+% Evaluation
+\input{Evaluation/evaluation}
+
+%===============================================================================
+% Discussion
+\input{Discussion/discussion}
+
+%===============================================================================
+% Conclusion
+\input{Conclusion/conclusion}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
+%                                   % on the last page of the document manually. It shortens
+%                                   % the textheight of the last page by a suitable amount.
+%                                   % This command does not take effect until the next page
+%                                   % so it should come on the page before the last. Make
+%                                   % sure that you do not shorten the textheight too much.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{ACKNOWLEDGMENT}
+The authors would like to thank Sébastien Briot and Andrea Gotelli for discussions aiding in the conceptualisation of this paper.
+
+
+\addcontentsline{toc}{section}{REFERENCES}
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv, literature}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}

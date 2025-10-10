@@ -1,0 +1,234 @@
+% Papers where CTCRs were introduced
+@INPROCEEDINGS{WebsterOkamuraCowan_IROS_2006,
+    title={Toward Active Cannulas: Miniature Snake-Like Surgical Robots}, 
+    author={Webster, Robert J. and Okamura, Allison M. and Cowan, Nah J.},
+    booktitle={2006 IEEE/RSJ International Conference on Intelligent Robots and Systems}, 
+    pages={2857--2863},
+    year={2006},
+}
+
+@INPROCEEDINGS{SearsDupont_IROS_2006,
+    title={A Steerable Needle Technology Using Curved Concentric Tubes}, 
+    author={Sears, Patrick and Dupont, Pierre},
+    booktitle={2006 IEEE/RSJ International Conference on Intelligent Robots and Systems}, 
+    pages={2850--2856},
+    year={2006},
+}
+
+% Analytical Solution for Two Tubes. Assumed the need for group perserving integrators
+@ARTICLE{DupontLockItkowitzButler_TRO_2010,
+    title={Design and Control of Concentric-Tube Robots}, 
+    author={Dupont, Pierre E. and Lock, Jesse and Itkowitz, Brandon and Butler, Evan},
+    journal={IEEE Transactions on Robotics}, 
+    volume={26},
+    number={2},
+    pages={209--225},
+    year={2010},
+}
+
+% OG Cosserat Rod Paper
+@ARTICLE{RuckerJonesWebster_TRO_2010,
+    title={A Geometrically Exact Model for Externally Loaded Concentric-Tube Continuum Robots}, 
+    author={Rucker, D. Caleb and Jones, Bryan A. and Webster III, Robert J.},
+    journal={IEEE Transactions on Robotics}, 
+    volume={26},
+    number={5},
+    pages={769--780},
+    year={2010}
+}
+
+% Using Analytical Jacobians to Compute IK
+@INPROCEEDINGS{RuckerWebster_ICRA_2011,
+    title={Computing Jacobians and compliance matrices for externally loaded continuum robots}, 
+    author={Rucker, D. Caleb and Webster, Robert J.},
+    booktitle={2011 IEEE International Conference on Robotics and Automation}, 
+    pages={945--950},
+    year={2011},
+}
+
+% Used collocation and magnus expansion to reformulate Cosserat Rod model. Unimpressive results.
+@INPROCEEDINGS{OrekhovSimaan_IROS_2020,
+  title={Solving Cosserat Rod Models via Collocation and the Magnus Expansion}, 
+  author={Orekhov, Andrew L. and Simaan, Nabil},
+  booktitle={2020 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 
+  pages={8653-8660},
+  year={2020}
+}
+
+% Speed ups through exploiting jacobian sparsity
+@INPROCEEDINGS{TillBrysonChungOrekhovRucker_ICRA_2015,
+    title={Efficient computation of multiple coupled Cosserat rod models for real-time simulation and control of parallel continuum manipulators}, 
+    author={Till, John and Bryson, Caroline E. and Chung, Scotty and Orekhov, Andrew and Rucker, D. Caleb},
+    booktitle={2015 IEEE International Conference on Robotics and Automation}, 
+    pages={5067--5074},
+    year={2015},
+}
+
+% Piecewise Linearization with Torque Sensing
+@INPROCEEDINGS{XuPatel_EMBC_2012,
+    title={A fast torsionally compliant kinematic model of concentric-tube robots}, 
+    author={Xu, R. and Patel, R. V.},
+    booktitle={2012 Annual International Conference of the IEEE Engineering in Medicine and Biology Society}, 
+    pages={904--907},
+    year={2012},
+}
+
+% Integration table format for RK, AB Integration Table, BVP Stiffness
+@BOOK{AscherPetzold_SIAM_1998,
+    title={Computer Methods for Ordinary Differential Equations and Differential-Algebraic Equations},
+    author={Ascher, Uri M and Petzold, Linda R},
+    year={1998},
+    publisher={SIAM}
+}
+
+% Newton Method, Secant Superlinear Convergence, and Initialize Inverse Jacobian to Identity technique
+@BOOK{Heath_SIAM_2018,
+    title={Scientific Computing: An Introductory Survey, revised second edition},
+    author={Heath, Michael T.},
+    year={2018},
+    publisher={SIAM}
+}
+
+% Survey by Jessica (Includes RK4 being used by community)
+@ARTICLE{Burgner-Kahrs_TRO_2015,
+    title={Continuum Robots for Medical Applications: A Survey}, 
+    author={Burgner-Kahrs, Jessica and Rucker, D. Caleb and Choset, Howie},
+    journal={IEEE Transactions on Robotics}, 
+    volume={31},
+    number={6},
+    pages={1261--1280},
+    year={2015},
+}
+
+% A continuum robot survey (No need for group perserving integrators)
+@Inbook{Gilbert_Springer_2016,
+    title={Concentric Tube Robots: The State of the Art and Future Directions},
+    author={Gilbert, Hunter B. and Rucker, D. Caleb and Webster III, Robert J.},
+    bookTitle={Robotics Research: The 16th International Symposium ISRR},
+    publisher={Springer International Publishing},
+    pages={253--269},
+    year={2016},
+}
+
+% No need for group perserving integrators
+@ARTICLE{DieciRussellVanVkeck_SIAM_1994,
+    title={Unitary Integrators and Applications to Continuous Orthonormalization Techniques},
+    author={Dieci, Luca and Russell, Robert D. and Van Vleck, Erik S.},
+    journal={SIAM Journal on Numerical Analysis},
+    volume={31},
+    number={1},
+    pages={261--281},
+    year={1994},
+}
+
+% A survey of rotation groups (Quaternions are singularity free. No three parameter representations are both global and nonsingular)
+@article{Stuelpnagel_SIAM_1964,
+    title={On the Parametrization of the Three-Dimensional Rotation Group},
+    author={Stuelpnagel, John},
+    journal={SIAM Review},
+    volume={6},
+    number={4},
+    pages={422-430},
+    year={1964}
+}
+
+% Keep the properties of unit quaternions by integrating non-unit quaternions.
+@ARTICLE{Rucker_RAL_2018,
+  title={Integrating Rotations Using Nonunit Quaternions}, 
+  author={Rucker, Caleb},
+  journal={IEEE Robotics and Automation Letters}, 
+  volume={3},
+  number={4},
+  pages={2979--2986},
+  year={2018},
+}
+
+% Joint Representation (Quaternions)
+@INPROCEEDINGS{GrassmanBurgner-Kahrs_RSS_2019,
+    title={On the Merits of Joint Space and Orientation Representations in Learning the Forward Kinematics in SE(3)},
+    author={Grassmann, Reinhard M. and Burgner-Kahrs, Jessica},
+    booktitle={2019 Robotics: Science and Systems XV},
+    year={2019},
+}
+
+% Broyden's OG Method where he suggested to use Sherman-Morrison formula for inverse jacobian
+@ARTICLE{Broyden_AMS_1965,
+    title={A Class of Methods for Solving Nonlinear Simultaneous Equations},
+    author={Broyden, C. G.},
+    journal={Mathematics of Computation},
+    volume={19},
+    number={92},
+    pages={577-593},
+    year={1965},
+    publisher={American Mathematical Society}
+}
+
+% Expanded Good Broyden Method
+@UNPUBLISHED{Misha_Lecture,
+    title={Chapter 3, Lecture 6: Broyden’s Method},
+    author={Mikhail Lavrov},
+    year={2019},
+    note={Lecture notes for Math 484: Nonlinear Programming, University of Illinois at Urbana-Champaign, Spring Semester},
+}
+
+% Dataset for CTCR
+@INPROCEEDINGS{GrassmanChenLiangBurgner-Kahrs_IROS_2022,
+    title={A Dataset and Benchmark for Learning the Kinematics of Concentric Tube Continuum Robots}, 
+    author={Grassmann, Reinhard M. and Chen, Ryan Zeyuan and Liang, Nan and Burgner-Kahrs, Jessica},
+    booktitle={2022 IEEE/RSJ International Conference on Intelligent Robots and Systems}, 
+    pages={9550--9557},
+    year={2022},
+}
+
+% Integration Tables for RK2, RK3, RK4. These methods are designed to reduce the truncation error to a minimum
+@ARTICLE{Ralston_AMS_1962,
+    title={Runge-Kutta methods with minimum error bounds},
+    author={Ralston, Anthony},
+    journal={Mathematics of Computation},
+    volume={16},
+    number={80},
+    pages={431--437},
+    year={1962},
+    publisher={American Mathematical Society}
+}
+
+% Disentanglement of Joints and Sampling
+@INPROCEEDINGS{GrassmannSenykBurgner-Kahrs_ICRA_2024,
+    title={On the Disentanglement of Tube Inequalities in Concentric Tube Continuum Robots}, 
+    author={Grassmann, Reinhard M. and Senyk, Anastasiia and Burgner-Kahrs, Jessica},
+    booktitle={2024 IEEE International Conference on Robotics and Automation},
+    year={2024},
+}
+
+% Elastic Stability and snapping paper
+@ARTICLE{WebsterRomanoCowan_TRO_2009,
+  title={Mechanics of Precurved-Tube Continuum Robots}, 
+  author={Webster, Robert J. and Romano, Joseph M. and Cowan, Noah J.},
+  journal={IEEE Transactions on Robotics}, 
+  volume={25},
+  number={1},
+  pages={67-78},
+  year={2009},
+}
+
+% Paper in which you can subtract joint angles
+@ARTICLE{Bergeles_TRO_2015,
+    title={Concentric Tube Robot Design and Optimization Based on Task and Anatomical Constraints}, 
+    author={Bergeles, Christos and Gosline, Andrew H. and Vasilyev, Nikolay V. and Codd, Patrick J. and del Nido, Pedro J. and Dupont, Pierre E.},
+    journal={IEEE Transactions on Robotics}, 
+    volume={31},
+    number={1},
+    pages={67--84},
+    year={2015},
+}
+
+% Stability Equilibria Paper. Solver iterations match equilibria points
+@ARTICLE{GilbertHendrickWebster_TRO_2016,
+    title={Elastic Stability of Concentric Tube Robots: A Stability Measure and Design Test}, 
+    author={Gilbert, Hunter B. and Hendrick, Richard J. and Webster III, Robert J.},
+    journal={IEEE Transactions on Robotics}, 
+    volume={32},
+    number={1},
+    pages={20--35},
+    year={2016},
+}
