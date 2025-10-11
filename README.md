@@ -57,9 +57,6 @@ The code relies on the **Eigen3** library for linear algebra operations. Most Li
         make mode=debug
         ```
 
-3. **Running the data collection and visualization scripts:**
-    The `Python` scripts 
-
 ### Running an Experiment
 
 The executable is controlled via command-line arguments. The solver, integrator, and step size are required.
@@ -104,15 +101,36 @@ The executable is controlled via command-line arguments. The solver, integrator,
     ./bin -s Broyden -i ForwardEuler -h 1e-3 -q -j 7e-3 -n 1000000 -w
     ```
 
+### Running the Data Collection and Visualization Pipeline
+
+A `Python` pipeline along with a a `YAML` config file is provided to easily run experiments, collect data, and evaluate results. A `data` folder will be automatically created once the pipeline is run; all the outputs will be save to it.
+
+**Setup a virtual environment and install dependencies:**
+  It is highly recommended to use a virtual environment so as to not affect your main `Python` runtime.
+
+  ```sh
+  python -m venv venv && source venv/bin/activate
+  pip install -r requirement.txt
+  ```
+
+**Run the pipeline:**
+  Please note that with the default values in the config file, the pipeline might take a few hours to a day to finish running:
+
+  ```sh
+  python main.py
+  ```
+
 ## 📂 Code Structure
 
 The project is organized into several key components:
 
   * `src/`: Contains the `.cpp` source files.
   * `include/`: Contains the `.hpp` header files.
-  * `scripts/`: Contains the `Python` scripts used to reproduce the experiments, collect the data, and generate graphs and figures.
+  * `utils/`: Contains the `Python` code used to reproduce the experiments, collect the data, and generate graphs and figures.
   * `legacy/`: Contains the initial `Python` implementation for developing the different methods being used.
   * `paper/`: Contains the `Latex` source code and the figures for the final manuscript.
+  * `main.py`: A pipeline that is made to facilitate the process of running experiments, collection data, and processing results.
+  * `config.yaml`: The config file for the `Python` pipeline.
   * `Makefile`: The build script for compiling the project.
   * `paper.pdf`: The manuscript detailing the project's methods and results.
 
