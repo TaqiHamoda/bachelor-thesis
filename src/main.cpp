@@ -285,7 +285,7 @@ void runExperiment(Tube ctcr[TUBE_NUM], CosseratRod &model, Options &options){
         cout << "U Optimal: " << u_init_opt.transpose() << "\n";
 
         for(i = 0; i < TUBE_NUM; i++){
-            cout << "Tip Position of Tube" << i + 1 << " (mm): " << model.constructTubeEnd(i).col(3).head(3).transpose() << "\n";
+            cout << "Tip Position of Tube" << i + 1 << " (meters): " << model.constructTubeEnd(i).col(3).head(3).transpose() << "\n";
         }
 
         cout << "Max Absolute Eigenvalue of A: " << model.getMaxJacobianEigen(u_init_opt) << "\n";

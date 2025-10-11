@@ -29,4 +29,4 @@ main.o: utils.o solver.o integrator.o CosseratRod.o include/main.hpp src/main.cp
 	$(CXX) $(CXXFLAGS) -c include/main.hpp src/main.cpp
 
 clean:
-	rm -f *.gch $(OBJS)
+	rm -f include/*.gch $(OBJS)
