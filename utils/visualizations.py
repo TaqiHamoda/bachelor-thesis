@@ -189,10 +189,7 @@ def probabilityDensityGraphs(max_eigen, s_iters, f_calls, p_err, d_dir, g_dir):
         plt.close()
 
 
-def process_datafiles(stiffness_dir, data_dir):
-    graphs_dir = f"{data_dir}/graphs"
-    os.makedirs(graphs_dir, exist_ok=True)
-
+def process_datafiles(stiffness_dir, data_dir, graphs_dir):
     alpha_1_3 = []
     alpha_2_3 = []
 

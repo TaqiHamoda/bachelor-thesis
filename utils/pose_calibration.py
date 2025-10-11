@@ -1,5 +1,4 @@
-import json
-import os
+import json, time
 from threading import Thread
 from typing import List, Tuple
 
@@ -7,22 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.optimize
 import scipy.stats
-import time
 
 from .dataparser import runModel
 from .visualizations import histogram
-
-
-# Constants
-N = 10_000  # Number of samples to use for optimization after outlier removal
-DATA_N = 100_000  # Total number of data points in the dataset
-THREAD_COUNT = 8  # Number of threads for parallel computation
-USE_SAVED_INDICES = False  # Flag to use pre-saved indices or recompute
-
-DATA_DIR = "../data/"  # Directory for data files
-GRAPHS_DIR = f"{DATA_DIR}/graphs/"  # Directory for generated graphs
-GROUND_TRUTH_PATH = "CRL-Dataset-CTCR-Pose.csv"  # Path to ground truth CSV
-INDICES_FILE_PATH = f"{DATA_DIR}/indices.json"  # Path to save/load indices
 
 # Initial parameter offsets (in meters)
 ORIGINAL_PARAMETERS = np.array([
@@ -126,19 +112,19 @@ def compute_tips(alphas: np.ndarray, betas: np.ndarray, start: int, end: int, ti
         tips[k] = dp.tip_positions
 
 
-def construct_tips(alphas: np.ndarray, betas: np.ndarray, num_points: int) -> np.ndarray:
+def construct_tips(alphas: np.ndarray, betas: np.ndarray, thread_count: int) -> np.ndarray:
     """
     Construct tip positions using multi-threading for all data points.
 
     :param alphas: Array of alpha values.
     :param betas: Array of beta values.
-    :param num_points: Number of points to compute (e.g., DATA_N or N).
-    :return: Array of tip positions (num_points, 3, 3).
+    :return: Array of tip positions (n, 3, 3).
     """
+    num_points = alphas.size
     tips = np.zeros((num_points, 3, 3))
     threads: List[Thread] = []
 
-    step = num_points // THREAD_COUNT
+    step = num_points // thread_count
     for h in range(0, num_points, step):
         thread_end = min(h + step, num_points)
         thread = Thread(target=compute_tips, args=(alphas, betas, h, thread_end, tips))
@@ -154,8 +140,7 @@ def construct_tips(alphas: np.ndarray, betas: np.ndarray, num_points: int) -> np
 def compute_position_errors(
     parameters: np.ndarray,
     data: List[np.ndarray],
-    tips: np.ndarray,
-    num_points: int
+    tips: np.ndarray
 ) -> np.ndarray:
     """
     Compute position errors for all segments relative to model tips.
@@ -163,9 +148,9 @@ def compute_position_errors(
     :param parameters: Optimization parameters (deltas for positions).
     :param data: Parsed dataset.
     :param tips: Model tip positions.
-    :param num_points: Number of points to process.
-    :return: Position errors for inner segment (num_points, 3).
+    :return: Position errors for inner segment (n, 3).
     """
+    num_points = data[0].size
     pos_err = np.zeros((num_points, 3))
 
     delta_pos_base = parameters[0:3]
@@ -204,8 +189,7 @@ def compute_position_errors(
 def residuals(
     parameters: np.ndarray,
     data: List[np.ndarray],
-    tips: np.ndarray,
-    num_points: int
+    tips: np.ndarray
 ) -> np.ndarray:
     """
     Compute residuals for least squares optimization.
@@ -216,9 +200,10 @@ def residuals(
     :param parameters: Optimization parameters (deltas for positions).
     :param data: Parsed dataset (subset for optimization).
     :param tips: Model tip positions (subset).
-    :param num_points: Number of points (N).
-    :return: Flat array of residuals (num_points * 3 segments * 3 coords).
+    :return: Flat array of residuals (n * 3 segments * 3 coords).
     """
+    num_points = data[0].size
+
     residuals_list: List[float] = []
 
     delta_pos_base = parameters[0:3]
@@ -262,7 +247,7 @@ def residuals(
     return np.array(residuals_list)
 
 
-def save_data(parameters: np.ndarray, pos_err: np.ndarray, function_calls: int) -> None:
+def save_data(parameters: np.ndarray, pos_err: np.ndarray, function_calls: int, data_dir: str, graphs_dir: str) -> None:
     """
     Save optimization results to JSON and generate a histogram of position errors.
 
@@ -272,7 +257,7 @@ def save_data(parameters: np.ndarray, pos_err: np.ndarray, function_calls: int) 
     """
     p_err_mm = 1e3 * np.linalg.norm(pos_err, axis=1)
 
-    with open(f"{DATA_DIR}/least_squares.json", "w") as f:
+    with open(f"{data_dir}/least_squares.json", "w") as f:
         json.dump({
             "Function Calls": function_calls,
             "Optimized parameters": parameters.tolist(),
@@ -286,7 +271,7 @@ def save_data(parameters: np.ndarray, pos_err: np.ndarray, function_calls: int) 
 
     histogram(p_err_mm)
     plt.tight_layout()
-    plt.savefig(f"{GRAPHS_DIR}/dataset_histogram.png")
+    plt.savefig(f"{graphs_dir}/dataset_histogram.png")
     plt.close()
 
 
@@ -297,7 +282,7 @@ def get_indices_without_outliers(pos_err: np.ndarray) -> np.ndarray:
     :param pos_err: Position errors (DATA_N, 3).
     :return: Array of indices without outliers.
     """
-    indices = np.ones(DATA_N, dtype=bool)
+    indices = np.ones(pos_err.size, dtype=bool)
     for a in range(3):  # Check each axis
         errors = pos_err[:, a]
         Q1 = np.percentile(errors, 25, method='midpoint')
@@ -307,7 +292,7 @@ def get_indices_without_outliers(pos_err: np.ndarray) -> np.ndarray:
         upper_limit = Q3 + 1.5 * IQR
         indices &= (errors > lower_limit) & (errors < upper_limit)
 
-    return np.arange(DATA_N)[indices]
+    return np.arange(pos_err.size)[indices]
 
 
 def optimize_parameters(
@@ -323,13 +308,15 @@ def optimize_parameters(
     :param tips: Subset of tip positions.
     :return: Optimized parameters and number of function calls.
     """
+    num_points = data[0].size
+
     print("Optimization started")
 
     function_calls = 0
 
     def residuals_wrapper(params):
         function_calls += 1
-        return residuals(params, data, tips, N)
+        return residuals(params, data, tips, num_points)
 
     start = time.perf_counter()
     result = scipy.optimize.least_squares(
@@ -341,26 +328,25 @@ def optimize_parameters(
     return result.x, function_calls
 
 
-if __name__ == "__main__":
-    os.makedirs(DATA_DIR, exist_ok=True)
-    os.makedirs(GRAPHS_DIR, exist_ok=True)
+def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count, use_saved_indices=True):
+    indices_file_path = f"{data_dir}/indices.json"
 
     # Parse the full dataset
-    data = parse_dataset(GROUND_TRUTH_PATH)
+    data = parse_dataset(ground_truth_path)
     print("Parsed dataset")
 
     alphas, betas = data[0], data[1]
 
     # Compute tips for all data points
-    all_tips = construct_tips(alphas, betas, DATA_N)
+    all_tips = construct_tips(alphas, betas, thread_count)
 
-    if not USE_SAVED_INDICES:
+    if not use_saved_indices:
         # Compute position errors with original parameters for outlier detection
-        pos_err = compute_position_errors(ORIGINAL_PARAMETERS, data, all_tips, DATA_N)
-        with open(INDICES_FILE_PATH, "w") as f:
+        pos_err = compute_position_errors(ORIGINAL_PARAMETERS, data, all_tips)
+        with open(indices_file_path, "w") as f:
             json.dump(pos_err.tolist(), f)
     else:
-        with open(INDICES_FILE_PATH, "r") as f:
+        with open(indices_file_path, "r") as f:
             pos_err = np.array(json.load(f))
 
     # Remove outliers
@@ -369,23 +355,22 @@ if __name__ == "__main__":
 
     # Shuffle and select N samples
     np.random.shuffle(valid_indices)
-    selected_indices = valid_indices[:N]
 
     # Subset data and tips
-    subset_data = [array[selected_indices] for array in data]
-    subset_tips = all_tips[selected_indices]
+    subset_data = [array[valid_indices] for array in data]
+    subset_tips = all_tips[valid_indices]
 
     # Optimize
     optimized_params, func_calls = optimize_parameters(ORIGINAL_PARAMETERS, subset_data, subset_tips)
 
     # Compute final position errors (only inner for stats)
-    final_pos_err = compute_position_errors(optimized_params, subset_data, subset_tips, N)
+    final_pos_err = compute_position_errors(optimized_params, subset_data, subset_tips)
 
     # Save final data
-    save_data(optimized_params, final_pos_err, func_calls)
+    save_data(optimized_params, final_pos_err, func_calls, data_dir, graphs_dir)
 
     # Compute and print ECDF statistic
-    with open(f"{DATA_DIR}/least_squares.json", 'r') as f:
+    with open(f"{data_dir}/least_squares.json", 'r') as f:
         results = json.load(f)
         p_err_mm = results["Position Errors (mm)"]
         ecdf = scipy.stats.ecdf(p_err_mm).cdf

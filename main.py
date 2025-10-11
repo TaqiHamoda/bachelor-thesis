@@ -42,6 +42,9 @@ if __name__ == "__main__":
     data_dir = config['data_dir']
     os.makedirs(data_dir, exist_ok=True)
 
+    graphs_dir = f"{data_dir}/graphs"
+    os.makedirs(graphs_dir, exist_ok=True)
+
     stiffness_dir = f"{data_dir}/stiffness"
     os.makedirs(stiffness_dir, exist_ok=True)
 
@@ -116,7 +119,8 @@ if __name__ == "__main__":
     if config['visualizations']['enabled']:
         process_datafiles(
             stiffness_dir=stiffness_dir,
-            data_dir=data_dir
+            data_dir=data_dir,
+            graphs_dir=graphs_dir
         )
 
     if config['error_evaluation']['enabled']:
