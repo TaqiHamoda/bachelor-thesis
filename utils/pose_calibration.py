@@ -333,37 +333,44 @@ def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count):
 
     # Parse the full dataset
     data = parse_dataset(ground_truth_path)
-    print("Parsed dataset")
+    print(f"Dataset parsed successfully. Found {len(data[0])} data points")
 
     alphas, betas = data[0], data[1]
+    print(f"Extracted {len(alphas)} alphas and {len(betas)} betas")
 
     # Compute tips for all data points
     all_tips = construct_tips(alphas, betas, thread_count)
+    print(f"Completed tip computation. Generated {len(all_tips)} tip points")
 
+    # Check for existing indices file
     if not os.path.exists(indices_file_path) or not os.path.isfile(indices_file_path):
-        # Compute position errors with original parameters for outlier detection
+        print("No existing indices file found. Computing position errors for outlier detection...")
         pos_err = compute_position_errors(ORIGINAL_PARAMETERS, data, all_tips)
+        print(f"Saving position errors to {indices_file_path}")
         with open(indices_file_path, "w") as f:
             json.dump(pos_err.tolist(), f)
+        print("Position errors saved")
     else:
+        print(f"Loading existing position errors from {indices_file_path}")
         with open(indices_file_path, "r") as f:
             pos_err = np.array(json.load(f))
+        print("Position errors loaded")
 
     # Remove outliers
     valid_indices = get_indices_without_outliers(pos_err)
-    print(f"Number of valid indices after outlier removal: {len(valid_indices)}")
+    print(f"Outlier removal complete. Number of valid indices: {len(valid_indices)}")
 
     # Shuffle and select N samples
     np.random.shuffle(valid_indices)
-
-    # Subset data and tips
     subset_data = [array[valid_indices] for array in data]
     subset_tips = all_tips[valid_indices]
 
     # Optimize
+    print("Starting parameter optimization...")
     optimized_params, func_calls = optimize_parameters(ORIGINAL_PARAMETERS, subset_data, subset_tips)
+    print(f"Optimization complete. Function calls: {func_calls}")
 
-    # Compute final position errors (only inner for stats)
+    # Compute final position errors
     final_pos_err = compute_position_errors(optimized_params, subset_data, subset_tips)
 
     # Save final data
@@ -374,4 +381,5 @@ def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count):
         results = json.load(f)
         p_err_mm = results["Position Errors (mm)"]
         ecdf = scipy.stats.ecdf(p_err_mm).cdf
-        print(f"Probability that values are less than 6.3 mm: {ecdf.evaluate(6.3) * 100}%")  # Should be around 92.67%
+        probability = ecdf.evaluate(6.3) * 100
+        print(f"Probability that values are less than 6.3 mm: {probability:.2f}%")
