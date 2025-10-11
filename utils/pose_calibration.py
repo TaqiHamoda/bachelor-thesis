@@ -120,7 +120,7 @@ def construct_tips(alphas: np.ndarray, betas: np.ndarray, thread_count: int) -> 
     :param betas: Array of beta values.
     :return: Array of tip positions (n, 3, 3).
     """
-    num_points = alphas.size
+    num_points = alphas.shape[0]
     tips = np.zeros((num_points, 3, 3))
     threads: List[Thread] = []
 
@@ -150,7 +150,7 @@ def compute_position_errors(
     :param tips: Model tip positions.
     :return: Position errors for inner segment (n, 3).
     """
-    num_points = data[0].size
+    num_points = data[0].shape[0]
     pos_err = np.zeros((num_points, 3))
 
     delta_pos_base = parameters[0:3]
@@ -202,7 +202,7 @@ def residuals(
     :param tips: Model tip positions (subset).
     :return: Flat array of residuals (n * 3 segments * 3 coords).
     """
-    num_points = data[0].size
+    num_points = data[0].shape[0]
 
     residuals_list: List[float] = []
 
@@ -308,7 +308,7 @@ def optimize_parameters(
     :param tips: Subset of tip positions.
     :return: Optimized parameters and number of function calls.
     """
-    num_points = data[0].size
+    num_points = data[0].shape[0]
 
     print("Optimization started")
 
