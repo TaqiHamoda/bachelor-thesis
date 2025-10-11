@@ -1,4 +1,4 @@
-import json, time
+import json, time, os
 from threading import Thread
 from typing import List, Tuple
 
@@ -328,7 +328,7 @@ def optimize_parameters(
     return result.x, function_calls
 
 
-def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count, use_saved_indices=True):
+def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count):
     indices_file_path = f"{data_dir}/indices.json"
 
     # Parse the full dataset
@@ -340,7 +340,7 @@ def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count, use_sa
     # Compute tips for all data points
     all_tips = construct_tips(alphas, betas, thread_count)
 
-    if not use_saved_indices:
+    if not os.path.exists(indices_file_path) or not os.path.isfile(indices_file_path):
         # Compute position errors with original parameters for outlier detection
         pos_err = compute_position_errors(ORIGINAL_PARAMETERS, data, all_tips)
         with open(indices_file_path, "w") as f:

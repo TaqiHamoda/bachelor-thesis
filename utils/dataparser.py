@@ -140,7 +140,7 @@ def dataParser(datapoint: str) -> DataPoint:
         elif data[0] == "./bin":
             extractFunctionCallData(data, dp)
         elif data[0] == "Runtime:":
-            dp.runtime = int(getResultValue(l)[0])
+            dp.runtime = float(getResultValue(l)[0])
         elif data[0] == "Residual":
             dp.res_err = float(getResultValue(l)[0])
         elif data[0] == "Position":
@@ -148,9 +148,9 @@ def dataParser(datapoint: str) -> DataPoint:
         elif data[0] == "Orientation":
             dp.ori_err = float(getResultValue(l)[0])
         elif data[0] == "Solver":
-            dp.s_iters = int(getResultValue(l)[0])
+            dp.s_iters = float(getResultValue(l)[0])
         elif data[0] == "Function":
-            dp.f_calls = int(getResultValue(l)[0])
+            dp.f_calls = float(getResultValue(l)[0])
         elif data[0] == "Alphas:":
             dp.alphas = convertToArray(getResultValue(l))
         elif data[0] == "Betas:":
@@ -167,11 +167,11 @@ def dataParser(datapoint: str) -> DataPoint:
     return dp
 
 
-def fileParser(filenames: list[str], dir="./data/") -> list[DataPoint]:
+def fileParser(filenames: list[str], data_dir: str) -> list[DataPoint]:
     datapoints = []
     
     for filename in filenames:
-        with open(f"{dir}/{filename}", "r") as f:
+        with open(f"{data_dir}/{filename}", "r") as f:
             datapoint = ""
             for l in f:
                 datapoint += l

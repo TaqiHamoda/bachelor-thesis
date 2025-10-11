@@ -1,10 +1,11 @@
 import numpy as np
 
 import yaml, subprocess, os, urllib.request
-from multiprocessing import Pool
+from multiprocessing import Process
 
-from .utils.dataparser import runModel
-from .utils.visualizations import process_datafiles
+from utils.dataparser import runModel
+from utils.visualizations import process_datafiles
+from utils.pose_calibration import calibrate_pose
 
 GROUND_TRUTH_POSE = "CRL-Dataset-CTCR-Pose.csv"
 GROUND_TRUTH_POSE_URL = "https://raw.githubusercontent.com/ContinuumRoboticsLab/CRL-Dataset-CTCR-Pose/refs/heads/main/CRL-Dataset-CTCR-Pose.csv"
@@ -78,11 +79,16 @@ if __name__ == "__main__":
                     f.write(str(dp))
 
     if config['stiffness']['enabled']:
-        with Pool(processes=config['stiffness']['threads']) as pool:
-            pool.map(
-                stiffness,
-                [(stiffness_dir, f"stiffness{i}", config['stiffness']['samples_per_thread'], config['stiffness']['solver'], config['stiffness']['integrator'], config['stiffness']['h'], bin_path) for i in range(config['stiffness']['threads'])]
-            )
+        ps = []
+        for i in range(config['stiffness']['threads']):
+            ps.append(Process(
+                target=stiffness,
+                args=(stiffness_dir, f"stiffness{i}", config['stiffness']['samples_per_thread'], config['stiffness']['solver'], config['stiffness']['integrator'], config['stiffness']['h'], bin_path)
+            ))
+            ps[-1].start()
+
+        for p in ps:
+            p.join()
 
     if config['finite_differences']['enabled']:
         with open(f"{data_dir}/finite_differences.txt", 'w') as f:
@@ -123,10 +129,15 @@ if __name__ == "__main__":
             graphs_dir=graphs_dir
         )
 
-    if config['error_evaluation']['enabled']:
+    if config['pose_calibration']['enabled']:
         if not os.path.exists(GROUND_TRUTH_POSE) or not os.path.isfile(GROUND_TRUTH_POSE):
             urllib.request.urlretrieve(GROUND_TRUTH_POSE_URL, GROUND_TRUTH_POSE)
 
-        
+        calibrate_pose(
+            GROUND_TRUTH_POSE,
+            data_dir,
+            graphs_dir,
+            config['pose_calibration']['threads']
+        )
 
 

@@ -214,7 +214,7 @@ def process_datafiles(stiffness_dir, data_dir, graphs_dir):
 
         print(f"Processing {filename}")
 
-        datapoints = fileParser((filename, ))
+        datapoints = fileParser((filename, ), stiffness_dir)
         for dp in datapoints:
             n_total += 1
             if dp.s_iters == 100:

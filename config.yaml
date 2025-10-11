@@ -29,3 +29,7 @@ finite_differences:
 
 visualizations:
   enabled: true
+
+pose_calibration:
+  enabled: true
+  threads: 8
