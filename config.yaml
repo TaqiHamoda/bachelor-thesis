@@ -1,35 +1,50 @@
-bin_path: ./bin
-data_dir: data
+bin_path: ./bin                    # Path to the executable binary used for simulations
+data_dir: data                     # Base directory where output data files are saved
 
+# Runtime experiments configuration
 runtime:
-  enabled: true
-  data_file: runtime.txt
-  samples: 1000000
-  solvers: [Newton, Broyden]
-  integrators: [ForwardEuler, AB2, AB3, AB4, AB5, RK2, RK3, RK4]
-  h: 1e-3
+  enabled: true                    # Enable or disable runtime experiments
+  data_file: runtime.txt           # Output file name for runtime experiment results
+  samples: 1000000                 # Number of simulation samples to run for each solver-integrator combination
+  h: 1e-3                          # Step size for numerical integration (e.g., 0.001)
+  solvers:                         # List of solvers to test
+    - Newton
+    - Broyden
+  integrators:                     # List of numerical integrators to test
+    - ForwardEuler
+    - AB2
+    - AB3
+    - AB4
+    - AB5
+    - RK2
+    - RK3
+    - RK4
 
+# Stiffness experiments configuration
 stiffness:
-  enabled: true
-  threads: 8
-  samples_per_thread: 2500000
-  solver: Broyden
-  integrator: AB4
-  h: 1e-3
+  enabled: true                    # Enable or disable stiffness experiments
+  threads: 8                       # Number of parallel threads to use for stiffness simulations
+  samples_per_thread: 2500000      # Number of simulation samples to run per thread
+  solver: Broyden                  # Solver to use for stiffness simulations
+  integrator: AB4                  # Integrator to use for stiffness simulations
+  h: 1e-3                          # Step size for numerical integration (e.g., 0.001)
 
+# Finite differences experiments configuration
 finite_differences:
-  enabled: true
-  samples: 1000000
-  solver: Broyden
-  integrator: AB4
-  h: 1e-3
-  j_start: 1.0
-  j_step: 0.25
-  j_end: 10.0
+  enabled: true                    # Enable or disable finite differences experiments
+  samples: 1000000                 # Number of simulation samples to run for each step size
+  solver: Broyden                  # Solver to use for finite differences simulations
+  integrator: AB4                  # Integrator to use for finite differences simulations
+  h: 1e-3                          # Step size for numerical integration (e.g., 0.001)
+  j_start: 1.0                     # Starting value for finite difference step size (in 10^-3 units)
+  j_step: 0.25                     # Increment for finite difference step size (in 10^-3 units)
+  j_end: 10.0                      # Ending value for finite difference step size (in 10^-3 units)
 
+# Visualization configuration
 visualizations:
-  enabled: true
+  enabled: true                    # Enable or disable generation of visualization plots
 
+# Pose calibration configuration
 pose_calibration:
-  enabled: true
-  threads: 8
+  enabled: true                    # Enable or disable pose calibration
+  threads: 8                       # Number of threads to use for parallel processing in pose calibration

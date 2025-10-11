@@ -136,4 +136,6 @@ The project is organized into several key components:
 
 ## 🌷 A Note of Gratitude
 
-This project would not have been possible without the incredible guidance and support of my co-authors and mentors. I want to extend my deepest gratitude to **Reinhard M. Grassmann** and **Prof. Jessica Burgner-Kahrs**, whose invaluable mentorship, patience, and expertise shaped this research from start to finish. Thank you for giving me the opportunity to work in the amazing environment of the **Continuum Robotics Laboratory**. Working with all of you was an absolute privilege and a highlight of my undergraduate career. Thank you for everything.
+This project would not have been possible without the incredible guidance and support of my co-authors and mentors. I want to extend my deepest gratitude to **Reinhard M. Grassmann** and **Prof. Jessica Burgner-Kahrs**, whose invaluable mentorship, patience, and expertise shaped this research from start to finish. Thank you for giving me the opportunity to work in the amazing environment of the **Continuum Robotics Laboratory**.
+
+Working with all of you was an absolute privilege and the highlight of my undergraduate career. Thank you for everything.
