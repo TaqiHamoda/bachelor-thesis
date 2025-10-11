@@ -1,7 +1,8 @@
+# Python related directories
+venv/
 .vscode/
 __pycache__/
 data/
-graphs/
 
 # C++ File Extensions
 *.o

@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats
+import os
 
-from dataparser import fileParser
+from .dataparser import fileParser
 
 
 def meshGraph(data_x, data_y, data_z, n=100):
@@ -51,7 +52,7 @@ def histogram(data: np.ndarray):
     ax2.tick_params(axis='y', labelcolor=color2)
 
 
-def forcesMeshGraphs(force1, force2, force3, max_eigen, s_iters, f_calls, p_err, dir="./graphs/"):
+def forcesMeshGraphs(force1, force2, force3, max_eigen, s_iters, f_calls, p_err, g_dir):
     # Color Mesh Graphs
     for d_variable in ("max eigen", "solver iterations", "function calls", "position error"):
         for g in ((1, 2), (1, 3), (2, 3)):
@@ -84,11 +85,11 @@ def forcesMeshGraphs(force1, force2, force3, max_eigen, s_iters, f_calls, p_err,
             plt.ylabel(r"$u_{%s}$" % (g[1]))
 
             plt.tight_layout()
-            plt.savefig(f"{dir}/{d_variable}_u_{g[0]}-{g[1]}.png")
+            plt.savefig(f"{g_dir}/{d_variable}_u_{g[0]}-{g[1]}.png")
             plt.close()
 
 
-def betasMeshGraphs(beta1, beta2, beta3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3, dir="./graphs/"):
+def betasMeshGraphs(beta1, beta2, beta3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3, g_dir):
     # Color Mesh Graphs
     for d_variable in ("max eigen", "solver iterations", "function calls", "position error", "u_1", "u_2", "u_3"):
         for g in ((1, 2), (1, 3), (2, 3)):
@@ -127,11 +128,11 @@ def betasMeshGraphs(beta1, beta2, beta3, max_eigen, s_iters, f_calls, p_err, u_1
             plt.ylabel(r"$\beta_{%s}$" % (g[1]))
 
             plt.tight_layout()
-            plt.savefig(f"{dir}/{d_variable}_beta_{g[0]}-{g[1]}.png")
+            plt.savefig(f"{g_dir}/{d_variable}_beta_{g[0]}-{g[1]}.png")
             plt.close()
 
 
-def alphasMeshGraphs(alpha_2_3, alpha_1_3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3, dir="./graphs/"):
+def alphasMeshGraphs(alpha_2_3, alpha_1_3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3, g_dir):
     for d_variable in ("max eigen", "solver iterations", "function calls", "position error", "u_1", "u_2", "u_3"):
         if d_variable == "max eigen":
             data_z = max_eigen
@@ -159,11 +160,11 @@ def alphasMeshGraphs(alpha_2_3, alpha_1_3, max_eigen, s_iters, f_calls, p_err, u
         plt.yticks(locs, labels)
 
         plt.tight_layout()
-        plt.savefig(f"{dir}/{d_variable}_Alpha 2 - Alpha 3-Alpha 1 - Alpha 3.png")
+        plt.savefig(f"{g_dir}/{d_variable}_Alpha 2 - Alpha 3-Alpha 1 - Alpha 3.png")
         plt.close()
 
 
-def probabilityDensityGraphs(max_eigen, s_iters, f_calls, p_err, d_dir="./data/", g_dir="./graphs/"):
+def probabilityDensityGraphs(max_eigen, s_iters, f_calls, p_err, d_dir, g_dir):
     for d_variable in ("max eigen", "solver iterations", "function calls", "position error"):
         if d_variable == "max eigen":
             data = max_eigen
@@ -188,8 +189,9 @@ def probabilityDensityGraphs(max_eigen, s_iters, f_calls, p_err, d_dir="./data/"
         plt.close()
 
 
-if __name__ == "__main__":
-    filenames = [f"stiffness{i}.txt" for i in range(1, 17)]
+def process_datafiles(stiffness_dir, data_dir):
+    graphs_dir = f"{data_dir}/graphs"
+    os.makedirs(graphs_dir, exist_ok=True)
 
     alpha_1_3 = []
     alpha_2_3 = []
@@ -209,7 +211,10 @@ if __name__ == "__main__":
 
     n_total = 0
     n_valid = 0
-    for filename in filenames:
+    for filename in os.listdir(stiffness_dir):
+        if not os.path.isfile(f"{stiffness_dir}/{filename}"):
+            continue
+
         print(f"Processing {filename}")
 
         datapoints = fileParser((filename, ))
@@ -260,7 +265,7 @@ if __name__ == "__main__":
     c_ecdf = scipy.stats.ecdf(max_eigen).sf
     print(f"Probability that values are greater than 20: {c_ecdf.evaluate(20) * 100}%")  # Should be around 0.0010612224752293287%
 
-    probabilityDensityGraphs(max_eigen, s_iters, f_calls, p_err)
-    alphasMeshGraphs(alpha_2_3, alpha_1_3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3)
-    betasMeshGraphs(beta_1, beta_2, beta_3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3)
-    forcesMeshGraphs(u_1, u_2, u_3, max_eigen, s_iters, f_calls, p_err)
+    probabilityDensityGraphs(max_eigen, s_iters, f_calls, p_err, d_dir=data_dir, g_dir=graphs_dir)
+    alphasMeshGraphs(alpha_2_3, alpha_1_3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3, g_dir=graphs_dir)
+    betasMeshGraphs(beta_1, beta_2, beta_3, max_eigen, s_iters, f_calls, p_err, u_1, u_2, u_3, g_dir=graphs_dir)
+    forcesMeshGraphs(u_1, u_2, u_3, max_eigen, s_iters, f_calls, p_err, g_dir=graphs_dir)

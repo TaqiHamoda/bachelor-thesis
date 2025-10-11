@@ -57,6 +57,9 @@ The code relies on the **Eigen3** library for linear algebra operations. Most Li
         make mode=debug
         ```
 
+3. **Running the data collection and visualization scripts:**
+    The `Python` scripts 
+
 ### Running an Experiment
 
 The executable is controlled via command-line arguments. The solver, integrator, and step size are required.
@@ -111,12 +114,8 @@ The project is organized into several key components:
   * `legacy/`: Contains the initial `Python` implementation for developing the different methods being used.
   * `paper/`: Contains the `Latex` source code and the figures for the final manuscript.
   * `Makefile`: The build script for compiling the project.
-  * `BVP-CTCR.pdf`: The manuscript detailing the project's methods and results.
+  * `paper.pdf`: The manuscript detailing the project's methods and results.
 
------
+## 🌷 A Note of Gratitude
 
-## 🙏 Acknowledgments
-
-This project would not have been possible without the incredible guidance and support of my co-authors and mentors. I want to extend my deepest gratitude to **Reinhard M. Grassmann** and **Prof. Jessica Burgner-Kahrs**, whose invaluable mentorship, patience, and expertise shaped this research from start to finish. Thank you for giving me the opportunity to work in the amazing environment of the **Continuum Robotics Laboratory**.
-
-Working with all of you was an absolute privilege and a highlight of my undergraduate career. Thank you for everything.
+This project would not have been possible without the incredible guidance and support of my co-authors and mentors. I want to extend my deepest gratitude to **Reinhard M. Grassmann** and **Prof. Jessica Burgner-Kahrs**, whose invaluable mentorship, patience, and expertise shaped this research from start to finish. Thank you for giving me the opportunity to work in the amazing environment of the **Continuum Robotics Laboratory**. Working with all of you was an absolute privilege and a highlight of my undergraduate career. Thank you for everything.

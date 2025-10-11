@@ -67,7 +67,7 @@ class DataPoint:
             s += f"U Optimal: " + " ".join([str(i) for i in self.u_optimal]) + "\n"
 
             for t in range(len(self.tip_positions)):
-                s += f"Tip Position of Tube{t + 1} (mm): " + " ".join([str(i) for i in self.tip_positions[t]]) + "\n"
+                s += f"Tip Position of Tube{t + 1} (meters): " + " ".join([str(i) for i in self.tip_positions[t]]) + "\n"
 
             s += f"Max Absolute Eigenvalue of A: {self.max_J_eigen}\n"
 
@@ -186,9 +186,9 @@ def fileParser(filenames: list[str], dir="./data/") -> list[DataPoint]:
     return datapoints
 
 
-def runModel(solver: str, integrator: str, h: float, fd_step: float=0, without_check: bool = False, quaternion: bool=False, samples: int=1, alphas: list[float]=[], betas: list[float]=[], forces: list[float]=[], e: list[float]=[], kappas: list[float]=[]) -> DataPoint:
-    args = ["../bin", "-s", solver, "-i", integrator, "-h", str(h)]
-    
+def runModel(solver: str, integrator: str, h: float, bin_path: str = "./bin", fd_step: float=0, without_check: bool = False, quaternion: bool=False, samples: int=1, alphas: list[float]=[], betas: list[float]=[], forces: list[float]=[], e: list[float]=[], kappas: list[float]=[]) -> DataPoint:
+    args = [bin_path, "-s", solver, "-i", integrator, "-h", str(h)]
+
     if fd_step > 0:
         args += ["-j", str(fd_step)]
 
