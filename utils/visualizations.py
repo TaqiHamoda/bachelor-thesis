@@ -265,14 +265,13 @@ def process_datafiles(stiffness_dir: str, data_dir: str, graphs_dir: str) -> Non
             continue
 
         print(f"Processing file: {filename}")
+
         # Parse data files into DataPoint objects
         datapoints = fileParser((filename,), stiffness_dir)
-        print(f"Parsed {len(datapoints)} data points from {filename}")
-
         for dp in datapoints:
             n_total += 1
-            if dp.s_iters == 100:  # Skip invalid data points
-                print(f"Skipping invalid data point (s_iters=100) in {filename}")
+            if dp.s_iters >= 100:  # Skip invalid data points
+                print(f"Skipping invalid data point (s_iters >= 100) in {filename}")
                 continue
 
             # Adjust alpha differences to ensure positive values
@@ -295,7 +294,6 @@ def process_datafiles(stiffness_dir: str, data_dir: str, graphs_dir: str) -> Non
             n_valid += 1
 
         datapoints.clear()
-        print(f"Completed processing {filename}. Valid data points so far: {n_valid}/{n_total}")
 
     print(f"Total data points processed: {n_total}, Valid data points: {n_valid}")
 
@@ -312,7 +310,6 @@ def process_datafiles(stiffness_dir: str, data_dir: str, graphs_dir: str) -> Non
     s_iters = np.array(s_iters)
     f_calls = np.array(f_calls)
     p_err = np.array(p_err)
-    print(f"Data conversion complete. Arrays created with {len(max_eigen)} valid entries")
 
     # Calculate and print probability of max_eigen > 20
     c_ecdf = scipy.stats.ecdf(max_eigen).sf

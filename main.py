@@ -35,7 +35,6 @@ def stiffness(
         h: Step size for numerical integration.
         bin_path: Path to the executable binary.
     """
-    print(f"Starting stiffness simulation for {prefix} with {samples} samples, solver: {solver}, integrator: {integrator}, step size: {h}")
     # Run simulations and collect data points
     datapoints = []
     for i in range(samples):
@@ -52,8 +51,6 @@ def stiffness(
     with open(output_file, 'w') as f:
         for dp in datapoints:
             f.write(str(dp))
-
-    print(f"Completed stiffness simulation for {prefix}")
 
 
 if __name__ == "__main__":
@@ -91,7 +88,6 @@ if __name__ == "__main__":
             # Generate all solver-integrator combinations
             combos = [(s, i) for s in config['runtime']['solvers'] for i in config['runtime']['integrators']]
             for solver, integrator in tqdm.tqdm(combos, desc="Running runtime experiments"):
-                print(f"Running runtime experiment with solver: {solver}, integrator: {integrator}")
                 # Run simulation with rotation matrix
                 dp = runModel(
                     solver=solver,
@@ -120,7 +116,6 @@ if __name__ == "__main__":
         print(f"Starting stiffness experiments with {config['stiffness']['threads']} threads")
         processes = []
         for i in range(config['stiffness']['threads']):
-            print(f"Starting stiffness process {i+1}/{config['stiffness']['threads']}")
             # Create and start a process for each thread
             p = Process(
                 target=stiffness,

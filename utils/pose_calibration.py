@@ -333,10 +333,8 @@ def calibrate_pose(ground_truth_path, data_dir, graphs_dir, thread_count):
 
     # Parse the full dataset
     data = parse_dataset(ground_truth_path)
-    print(f"Dataset parsed successfully. Found {len(data[0])} data points")
-
     alphas, betas = data[0], data[1]
-    print(f"Extracted {len(alphas)} alphas and {len(betas)} betas")
+    print(f"Extracted {len(alphas)} poses")
 
     # Compute tips for all data points
     all_tips = construct_tips(alphas, betas, thread_count)
