@@ -11,3 +11,8 @@ data/
 *.debug
 bin
 build/
+
+# Misc.
+*.txt
+*.png
+*.csv

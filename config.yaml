@@ -26,3 +26,6 @@ finite_differences:
   j_start: 1.0
   j_step: 0.25
   j_end: 10.0
+
+visualizations:
+  enabled: true

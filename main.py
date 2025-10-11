@@ -1,10 +1,13 @@
 import numpy as np
 
-import yaml, subprocess, os
+import yaml, subprocess, os, urllib.request
 from multiprocessing import Pool
 
-from .utils.dataparser import runModel, fileParser
+from .utils.dataparser import runModel
 from .utils.visualizations import process_datafiles
+
+GROUND_TRUTH_POSE = "CRL-Dataset-CTCR-Pose.csv"
+GROUND_TRUTH_POSE_URL = "https://raw.githubusercontent.com/ContinuumRoboticsLab/CRL-Dataset-CTCR-Pose/refs/heads/main/CRL-Dataset-CTCR-Pose.csv"
 
 
 def stiffness(
@@ -112,5 +115,14 @@ if __name__ == "__main__":
 
     if config['visualizations']['enabled']:
         process_datafiles(
-            stiffness_dir=stiffness_dir
+            stiffness_dir=stiffness_dir,
+            data_dir=data_dir
         )
+
+    if config['error_evaluation']['enabled']:
+        if not os.path.exists(GROUND_TRUTH_POSE) or not os.path.isfile(GROUND_TRUTH_POSE):
+            urllib.request.urlretrieve(GROUND_TRUTH_POSE_URL, GROUND_TRUTH_POSE)
+
+        
+
+
