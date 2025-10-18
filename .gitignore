@@ -13,7 +13,4 @@ bin
 build/
 
 # Misc.
-*.txt
-*.json
-*.png
 *.csv

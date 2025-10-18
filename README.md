@@ -1,16 +1,16 @@
 # From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs
 
-This repository contains the C++ implementation along with my Python legacy code for the paper **"From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs for use in Real-Time Systems"**. This research was conducted as part of my bachelor thesis at the **Continuum Robotics Laboratory, University of Toronto** and was entirely funded by the Natural Sciences and Engineering Research Council of Canada (**NSERC: [RGPIN-2019-04846]**).
+This repository contains the C++ implementation along with my Python legacy code for the report **"From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs for use in Real-Time Systems"**. This research was conducted as part of my bachelor thesis at the **Continuum Robotics Laboratory, University of Toronto** and was entirely funded by the Natural Sciences and Engineering Research Council of Canada (**NSERC: [RGPIN-2019-04846]**).
 
 The project focuses on dramatically improving the computational performance of the static Cosserat rod model for Concentric Tube Continuum Robots (CTCRs). By applying a series of numerical optimizations, we were able to reduce the forward kinematics computation time to just **120 microseconds**—a reduction of up to **90%** in function calls compared to standard methods, without sacrificing accuracy.
 
 ## 📜 A Note on the Publication Status
 
-You might notice that the accompanying paper was not formally published. I believe in transparency in research, and I want to share the story behind this work.
+You might notice that the accompanying report was not formally published. I believe in transparency in research, and I want to share the story behind this work.
 
-During my thesis, we achieved some very exciting results, particularly in runtime optimization. However, a cornerstone of our stiffness analysis relied on a statistical approach to approximate the upper bound of the system's eigenvalues. While this method proved effective for our specific CTCR parameters and generated consistent results, it lacked the rigorous, definite mathematical proof that is rightfully expected for publication in top-tier robotics journals. We had strong empirical evidence, but not a formal, analytical guarantee of the system's non-stiffness.
+During my thesis, we achieved some very exciting results, particularly in runtime optimization. However, a cornerstone of our stiffness analysis relied on a statistical approach to approximate the upper bound of the system's eigenvalues. While this method proved effective for our specific CTCR parameters and generated consistent results, it lacked the rigorous, definite mathematical proof that is rightfully expected for publications in top-tier robotics journals. We had strong empirical evidence, but not a formal, analytical guarantee of the system's non-stiffness.
 
-Additionally, our exploration led to an interesting possible discovery: a potential numerical proxy for assessing the robot's elastic stability and predicting "snapping" behavior. This was a promising avenue, but due to the time constraints of a bachelor's thesis, I couldn't explore it to the depth it deserved. It remains an open question that I believe is ripe for future research.
+Additionally, our exploration led to an interesting possible discovery: a potential numerical proxy for assessing the robot's elastic stability and predicting "snapping" behavior. This was a promising avenue, but due to the time constraints of a bachelor's thesis, I couldn't explore it to the depth it deserved.
 
 Despite not crossing the publication finish line, I am incredibly proud of this work and the collaboration that made it possible. I'm sharing it with the hope that it can be a useful resource for other students, researchers, and engineers working on continuum robotics.
 
@@ -95,7 +95,7 @@ The executable is controlled via command-line arguments. The solver, integrator,
     ./bin -s Broyden -i AB2 -h 1e-3
     ```
 
-  * **Benchmark the performance over 1,000,000 samples using the fully optimized configuration from the paper:**
+  * **Benchmark the performance over 1,000,000 samples using the fully optimized configuration from the report:**
 
     ```sh
     ./bin -s Broyden -i ForwardEuler -h 1e-3 -q -j 7e-3 -n 1000000 -w
@@ -128,11 +128,11 @@ The project is organized into several key components:
   * `include/`: Contains the `.hpp` header files.
   * `utils/`: Contains the `Python` code used to reproduce the experiments, collect the data, and generate graphs and figures.
   * `legacy/`: Contains the initial `Python` implementation for developing the different methods being used.
-  * `paper/`: Contains the `Latex` source code and the figures for the final manuscript.
+  * `report/`: Contains the `Latex` source code and the figures for the final manuscript.
   * `main.py`: A pipeline that is made to facilitate the process of running experiments, collection data, and processing results.
   * `config.yaml`: The config file for the `Python` pipeline.
   * `Makefile`: The build script for compiling the project.
-  * `paper.pdf`: The manuscript detailing the project's methods and results.
+  * `report.pdf`: The manuscript detailing the project's methods and results.
 
 ## 🌷 A Note of Gratitude
 

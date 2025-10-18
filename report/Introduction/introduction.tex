@@ -14,17 +14,6 @@ Due to the complex elastic interactions between the tubes, numerical tools are o
 Rucker et al. introduced in \cite{RuckerJonesWebster_TRO_2010} a highly-accurate physics model based on Cosserat rod theory, formulating the robot's kinematics as a boundary value problem (BVP) with unknown initial conditions.
 Although this model is the gold-standard for CTCR modeling, there is a high computational cost associated with solving its BVP.
 
-\begin{figure}
-    %\fbox{
-    \includegraphics[width=\columnwidth]{Figures/CTCR.png}
-    %}
-    \caption{
-    Diagram of an annotated CTCR consisting of three precurved tubes. Please note that the innermost, middle, and outermost tubes are referenced with the indices 1, 2, and 3 respectively.
-    }
-    \label{fig:ctcr}
-\end{figure}
-}
-
 \bulletpoints{
     \item Topic Sentence: To justify the problem mentioned in the previous paragraph, this paragraph should introduce to the reader the literature on Cosserat Rod optimizations. The goal is to convince the reader that although there has been a lot of work in this area, there has been no definite, universal approach to optimize the problem.
     \item Provide a brief overview of the various efforts that have been undertaken to optimize the problem
@@ -52,6 +41,17 @@ Despite these advancements, there remains a critical need for an optimization st
 This paper presents a comprehensive investigation of the numerical tools used in the computation of the static forward kinematics (FK) of CTCRs.
 We introduce a variety of numerical optimization techniques that result in significant runtime reductions with no compromise in accuracy, enabling real-time performance while maintaining universal applicability across model implementations.
 Additionally, we demonstrate a potential numerical proxy for assessing the robot's elastic stability which opens up new possibilities for stable path planning in CTCR systems.
+}
+
+\begin{figure}
+    %\fbox{
+    \includegraphics[width=\columnwidth]{Figures/CTCR.png}
+    %}
+    \caption{
+    Diagram of an annotated CTCR consisting of three precurved tubes. Please note that the innermost, middle, and outermost tubes are referenced with the indices 1, 2, and 3 respectively.
+    }
+    \label{fig:ctcr}
+\end{figure}
 }
 
 \subsection{State of the Art}
