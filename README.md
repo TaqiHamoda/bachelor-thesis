@@ -1,5 +1,7 @@
 # From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs
 
+[![DOI](https://zenodo.org/badge/1073692035.svg)](https://doi.org/10.5281/zenodo.19283166)
+
 This repository contains the C++ implementation along with my Python legacy code for the report **"From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs for use in Real-Time Systems"**. This research was conducted as part of my bachelor thesis at the **Continuum Robotics Laboratory, University of Toronto** and was entirely funded by the Natural Sciences and Engineering Research Council of Canada (**NSERC: [RGPIN-2019-04846]**).
 
 The project focuses on dramatically improving the computational performance of the static Cosserat rod model for Concentric Tube Continuum Robots (CTCRs). By applying a series of numerical optimizations, we were able to reduce the forward kinematics computation time to just **120 microseconds**—a reduction of up to **90%** in function calls compared to standard methods, without sacrificing accuracy.
