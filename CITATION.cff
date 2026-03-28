@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software or thesis, please cite it as below."
+authors:
+  - family-names: "Hamoda"
+    given-names: "Taqi"
+    orcid: "https://orcid.org/0009-0003-5744-8287"
+title: "From Milliseconds to Microseconds: Optimizing the Static Forward Kinematics of CTCRs"
+version: 1.0.0
+doi: "10.5281/zenodo.19283167"
+date-released: 2025-10-10
+url: "https://github.com/TaqiHamoda/Bachelor-Thesis"
+publisher:
+  name: "Zenodo"
